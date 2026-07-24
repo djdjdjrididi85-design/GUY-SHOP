@@ -8,7 +8,7 @@
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link
-        href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&family=Orbitron:wght@500;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800;900&family=Orbitron:wght@500;700;800;900&display=swap"
         rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -42,16 +42,9 @@
             scroll-behavior: smooth;
         }
 
+        /* Disabled orange mouse aura spotlight */
         body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: -1;
-            background: radial-gradient(circle 240px at var(--mouse-x, -9999px) var(--mouse-y, -9999px), rgba(255, 122, 0, 0.45) 0%, rgba(255, 149, 0, 0.15) 50%, transparent 100%);
-            pointer-events: none;
+            display: none;
         }
 
         /* Cyber Trading Chart Background Animation */
@@ -135,11 +128,12 @@
             margin: 15px auto 25px auto;
             padding: 12px 28px;
             border-radius: 30px;
-            background: linear-gradient(135deg, rgba(26, 28, 42, 0.88) 0%, rgba(14, 15, 23, 0.94) 100%);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 149, 0, 0.3);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 0 25px rgba(255, 122, 0, 0.15);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
+            backdrop-filter: blur(24px) saturate(180%);
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-top: 1px solid rgba(255, 255, 255, 0.35);
+            box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.3), 0 15px 35px rgba(0, 0, 0, 0.5);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -168,20 +162,25 @@
         }
 
         .brand-logo {
-            font-family: Orbitron, sans-serif;
+            font-family: Orbitron, Kanit, sans-serif;
             background: linear-gradient(135deg, #ffffff 0%, #ffc107 50%, #ff7a00 100%);
-            background-clip: text;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             font-weight: 800;
-            font-size: 23px;
+            font-size: 24px;
             cursor: pointer;
             letter-spacing: 1.5px;
             white-space: nowrap;
             display: flex;
             align-items: center;
             gap: 10px;
-            text-shadow: 0 0 18px rgba(255, 122, 0, 0.3);
+            filter: drop-shadow(0 0 16px rgba(255, 122, 0, 0.4));
+            transition: var(--base-transition);
+        }
+
+        .brand-logo:hover {
+            transform: scale(1.04);
+            filter: drop-shadow(0 0 24px rgba(255, 149, 0, 0.7));
         }
 
         .brand-logo-dot {
@@ -281,8 +280,394 @@
             transform: translateY(-1px);
         }
 
+        /* Hamburger Toggle Button */
+        .hamburger-toggle-btn {
+            background: linear-gradient(135deg, rgba(255, 149, 0, 0.15) 0%, rgba(255, 122, 0, 0.08) 100%);
+            border: 1px solid rgba(255, 149, 0, 0.35);
+            color: #ff9500;
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            font-family: Kanit, sans-serif;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--base-transition);
+            box-shadow: 0 4px 15px rgba(255, 122, 0, 0.15);
+        }
+
+        .hamburger-toggle-btn:hover {
+            background: linear-gradient(135deg, rgba(255, 149, 0, 0.25) 0%, rgba(255, 122, 0, 0.18) 100%);
+            border-color: rgba(255, 180, 0, 0.6);
+            color: #ffffff;
+            box-shadow: 0 6px 20px rgba(255, 122, 0, 0.3);
+            transform: translateY(-1px);
+        }
+
+        /* Cyber Glass Nav Drawer Overlay */
+        .drawer-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(8, 9, 14, 0.65);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 99999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.35s ease, visibility 0.35s ease;
+        }
+
+        .drawer-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .drawer-content {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 320px;
+            max-width: 85vw;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(22, 24, 36, 0.95) 0%, rgba(12, 13, 20, 0.98) 100%);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-left: 1px solid rgba(255, 149, 0, 0.25);
+            box-shadow: -10px 0 40px rgba(0, 0, 0, 0.7);
+            transform: translateX(100%);
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            padding: 24px 20px;
+            box-sizing: border-box;
+        }
+
+        .drawer-overlay.active .drawer-content {
+            transform: translateX(0);
+        }
+
+        .drawer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            margin-bottom: 20px;
+        }
+
+        .drawer-brand {
+            font-family: Orbitron, Kanit, sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .drawer-close-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: var(--base-transition);
+        }
+
+        .drawer-close-btn:hover {
+            background: rgba(255, 77, 77, 0.2);
+            color: #ff4d4d;
+            border-color: rgba(255, 77, 77, 0.4);
+        }
+
+        .drawer-body {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .drawer-user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.09) 0%, rgba(255, 255, 255, 0.02) 100%);
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-top: 1px solid rgba(255, 255, 255, 0.28);
+            box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.25), 0 10px 25px rgba(0, 0, 0, 0.4);
+            padding: 14px 18px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .drawer-user-info::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0) 100%);
+            pointer-events: none;
+            border-radius: 20px 20px 0 0;
+        }
+
+        /* Drawer Dock Badge Deck (Vertical Stack - Liquid Glass Theme) */
+        .drawer-dock-deck {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .drawer-dock-badge {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            width: 100%;
+            padding: 14px 20px;
+            border-radius: 20px;
+            font-family: Kanit, sans-serif;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.07) 0%, rgba(255, 255, 255, 0.02) 100%);
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-top: 1px solid rgba(255, 255, 255, 0.25);
+            box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.2), 0 8px 24px rgba(0, 0, 0, 0.35);
+            color: rgba(255, 255, 255, 0.9);
+            text-align: left;
+            position: relative;
+            outline: none;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        .drawer-dock-badge::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 45%;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 100%);
+            pointer-events: none;
+        }
+
+        .drawer-dock-badge .dock-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: transform 0.25s ease;
+        }
+
+        .drawer-dock-badge .dock-label {
+            flex: 1;
+        }
+
+        .drawer-dock-badge .arrow-icon {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.3);
+            transition: transform 0.25s ease, color 0.25s ease;
+        }
+
+        .drawer-dock-badge:hover {
+            color: #ffffff;
+        }
+
+        .drawer-dock-badge:hover .arrow-icon {
+            transform: translateX(3px);
+            color: #ffffff;
+        }
+
+        /* 1. Home Dock Badge (Gold/Orange Liquid Glass) */
+        .drawer-dock-badge.badge-home .dock-icon {
+            background: linear-gradient(135deg, rgba(255, 149, 0, 0.25) 0%, rgba(255, 122, 0, 0.12) 100%);
+            color: #ff9500;
+            border: 1px solid rgba(255, 149, 0, 0.35);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+        .drawer-dock-badge.badge-home:hover {
+            background: linear-gradient(135deg, rgba(255, 149, 0, 0.22) 0%, rgba(255, 122, 0, 0.08) 100%);
+            border-color: rgba(255, 149, 0, 0.6);
+            border-top-color: rgba(255, 200, 100, 0.8);
+            box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.4), 0 10px 28px rgba(255, 122, 0, 0.3);
+            transform: translateX(6px) translateY(-2px);
+        }
+
+        /* 2. User Account Badge (Cyan/Blue Liquid Glass) */
+        .drawer-dock-badge.badge-user .dock-icon {
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.25) 0%, rgba(14, 165, 233, 0.12) 100%);
+            color: #38bdf8;
+            border: 1px solid rgba(56, 189, 248, 0.35);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+        .drawer-dock-badge.badge-user:hover {
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.22) 0%, rgba(14, 165, 233, 0.08) 100%);
+            border-color: rgba(56, 189, 248, 0.6);
+            border-top-color: rgba(180, 230, 255, 0.8);
+            box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.4), 0 10px 28px rgba(56, 189, 248, 0.3);
+            transform: translateX(6px) translateY(-2px);
+        }
+
+        /* 3. Admin Control Badge (Red Danger Liquid Glass) */
+        .drawer-dock-badge.badge-admin .dock-icon {
+            background: linear-gradient(135deg, rgba(255, 77, 77, 0.25) 0%, rgba(239, 68, 68, 0.12) 100%);
+            color: #ff4d4d;
+            border: 1px solid rgba(255, 77, 77, 0.35);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+        .drawer-dock-badge.badge-admin:hover {
+            background: linear-gradient(135deg, rgba(255, 77, 77, 0.22) 0%, rgba(239, 68, 68, 0.08) 100%);
+            border-color: rgba(255, 77, 77, 0.6);
+            border-top-color: rgba(255, 180, 180, 0.8);
+            box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.4), 0 10px 28px rgba(255, 77, 77, 0.3);
+            transform: translateX(6px) translateY(-2px);
+        }
+
+        /* 4. Register Badge (Yellow/Gold Liquid Glass) */
+        .drawer-dock-badge.badge-reg .dock-icon {
+            background: linear-gradient(135deg, rgba(255, 193, 7, 0.25) 0%, rgba(245, 158, 11, 0.12) 100%);
+            color: #ffc107;
+            border: 1px solid rgba(255, 193, 7, 0.35);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+        .drawer-dock-badge.badge-reg:hover {
+            background: linear-gradient(135deg, rgba(255, 193, 7, 0.22) 0%, rgba(245, 158, 11, 0.08) 100%);
+            border-color: rgba(255, 193, 7, 0.6);
+            border-top-color: rgba(255, 235, 150, 0.8);
+            box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.4), 0 10px 28px rgba(255, 193, 7, 0.3);
+            transform: translateX(6px) translateY(-2px);
+        }
+
+        /* 5. Login Badge (Emerald Green Liquid Glass) */
+        .drawer-dock-badge.badge-login .dock-icon {
+            background: linear-gradient(135deg, rgba(0, 230, 118, 0.25) 0%, rgba(16, 185, 129, 0.12) 100%);
+            color: #00e676;
+            border: 1px solid rgba(0, 230, 118, 0.35);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+        .drawer-dock-badge.badge-login:hover {
+            background: linear-gradient(135deg, rgba(0, 230, 118, 0.22) 0%, rgba(16, 185, 129, 0.08) 100%);
+            border-color: rgba(0, 230, 118, 0.6);
+            border-top-color: rgba(180, 255, 210, 0.8);
+            box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.4), 0 10px 28px rgba(0, 230, 118, 0.3);
+            transform: translateX(6px) translateY(-2px);
+        }
+
+        /* 6. Logout Badge (Rose Red Liquid Glass) */
+        .drawer-dock-badge.badge-logout .dock-icon {
+            background: linear-gradient(135deg, rgba(244, 63, 94, 0.25) 0%, rgba(225, 29, 72, 0.12) 100%);
+            color: #f43f5e;
+            border: 1px solid rgba(244, 63, 94, 0.35);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+        .drawer-dock-badge.badge-logout:hover {
+            background: linear-gradient(135deg, rgba(244, 63, 94, 0.22) 0%, rgba(225, 29, 72, 0.08) 100%);
+            border-color: rgba(244, 63, 94, 0.6);
+            border-top-color: rgba(255, 180, 200, 0.8);
+            box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.4), 0 10px 28px rgba(244, 63, 94, 0.3);
+            transform: translateX(6px) translateY(-2px);
+        }
+
+
+
+        .drawer-footer {
+            padding-top: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.4);
+            text-align: center;
+            letter-spacing: 1px;
+        }
+
+        /* Ultra-Modern Liquid Glass Section Header */
+        .section-header-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 35px 0 25px 0;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .section-title-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 14px;
+            padding: 10px 22px;
+            border-radius: 25px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-top: 1px solid rgba(255, 255, 255, 0.32);
+            box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.3), 0 10px 28px rgba(0, 0, 0, 0.45);
+        }
+
+        .section-icon-box {
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(255, 149, 0, 0.3) 0%, rgba(255, 122, 0, 0.12) 100%);
+            border: 1px solid rgba(255, 149, 0, 0.45);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
+            color: #ff9500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 17px;
+            filter: drop-shadow(0 0 10px rgba(255, 149, 0, 0.6));
+        }
+
+        .section-title {
+            font-family: Kanit, sans-serif;
+            font-size: 26px;
+            font-weight: 800;
+            margin: 0;
+            letter-spacing: 0.5px;
+            background: linear-gradient(135deg, #ffffff 0%, #ffc107 60%, #ff9500 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.8));
+            line-height: 1.2;
+        }
+
+        .section-badge-live {
+            font-family: Orbitron, sans-serif;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            color: #00e676;
+            background: rgba(0, 230, 118, 0.12);
+            border: 1px solid rgba(0, 230, 118, 0.3);
+            padding: 4px 10px;
+            border-radius: 12px;
+            margin-left: 6px;
+            text-transform: uppercase;
+        }
+
         .content-page {
-            display: none;
+            display: none !important;
             padding: 40px 20px;
             max-width: 1200px;
             margin: 0 auto;
@@ -292,7 +677,7 @@
         }
 
         .content-page.active {
-            display: block;
+            display: block !important;
             animation: appFadeIn 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
         }
 
@@ -316,10 +701,14 @@
         }
 
         .item-card {
-            background: linear-gradient(165deg, rgba(28, 30, 44, 0.85) 0%, rgba(18, 19, 29, 0.9) 100%);
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.07) 0%, rgba(255, 255, 255, 0.02) 100%);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
             border-radius: 24px;
             padding: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.25), 0 15px 35px rgba(0, 0, 0, 0.5);
             transition: var(--base-transition);
             display: flex;
             flex-direction: column;
@@ -327,21 +716,32 @@
             overflow: hidden;
             width: 100%;
             box-sizing: border-box;
-            backdrop-filter: blur(16px);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .item-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 40%;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0) 100%);
+            pointer-events: none;
+            border-radius: 24px 24px 0 0;
         }
 
         .item-card:hover {
-            transform: translateY(-6px);
-            border-color: rgba(255, 149, 0, 0.45);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 25px rgba(255, 122, 0, 0.2);
-            background: linear-gradient(165deg, rgba(34, 36, 52, 0.95) 0%, rgba(22, 24, 36, 0.95) 100%);
+            transform: translateY(-8px);
+            background: linear-gradient(145deg, rgba(255, 149, 0, 0.12) 0%, rgba(255, 255, 255, 0.04) 100%);
+            border-color: rgba(255, 149, 0, 0.5);
+            border-top-color: rgba(255, 200, 100, 0.8);
+            box-shadow: inset 0 1px 2px 0 rgba(255, 255, 255, 0.4), 0 20px 45px rgba(0, 0, 0, 0.65), 0 0 30px rgba(255, 122, 0, 0.25);
         }
 
-        /* Media Frame Container - Expanded height so 100% of video content is shown without being covered */
+        /* Media Frame Container - Compact 240px height for sleek proportions */
         .media-frame {
             width: 100%;
-            height: 350px;
+            height: 240px;
             border-radius: 18px;
             margin-bottom: 16px;
             background: linear-gradient(180deg, rgba(20, 22, 34, 0.95) 0%, rgba(10, 11, 18, 0.98) 100%);
@@ -354,15 +754,80 @@
             box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.5);
         }
 
+        /* Collapsible Description Container & Toggle Button */
+        .card-desc-wrapper {
+            max-height: 52px;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            margin-bottom: 10px;
+        }
+
+        .card-desc-wrapper.expanded {
+            max-height: 1200px;
+        }
+
+        .card-desc {
+            font-size: 13px;
+            line-height: 1.5;
+            color: rgba(255, 255, 255, 0.7);
+            margin: 0;
+            white-space: pre-line;
+            word-break: break-word;
+        }
+
+        .btn-toggle-desc {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 100%);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-top: 1px solid rgba(255, 255, 255, 0.22);
+            color: rgba(255, 180, 0, 0.9);
+            padding: 6px 14px;
+            border-radius: 12px;
+            font-family: Kanit, sans-serif;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 12px;
+            transition: all 0.25s ease;
+            outline: none;
+            align-self: flex-start;
+        }
+
+        .btn-toggle-desc:hover {
+            background: linear-gradient(135deg, rgba(255, 149, 0, 0.18) 0%, rgba(255, 122, 0, 0.06) 100%);
+            border-color: rgba(255, 149, 0, 0.45);
+            border-top-color: rgba(255, 200, 100, 0.7);
+            color: #ffffff;
+            box-shadow: 0 4px 15px rgba(255, 122, 0, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .btn-toggle-desc i {
+            transition: transform 0.3s ease;
+            font-size: 11px;
+        }
+
+        .btn-toggle-desc.expanded i {
+            transform: rotate(180deg);
+        }
+
         .media-frame video,
         .media-frame img {
             width: 100%;
             height: 100%;
-            object-fit: contain; /* Full video visible without being covered or cropped */
+            object-fit: contain;
             object-position: center;
             display: block;
             border-radius: 14px;
-            transition: var(--base-transition);
+            transition: opacity 0.25s ease, transform 0.25s ease;
+            will-change: transform, opacity;
+            transform: translateZ(0);
+            content-visibility: auto;
         }
 
         .item-card:hover .media-frame video,
@@ -396,40 +861,66 @@
         }
 
         .badge-recommended {
-            background: rgba(255, 122, 0, 0.15);
-            color: #ff9500;
-            border: 1px solid rgba(255, 122, 0, 0.35);
+            background: linear-gradient(135deg, rgba(255, 71, 87, 0.2) 0%, rgba(255, 107, 129, 0.1) 100%);
+            color: #ff4757;
+            border: 1px solid rgba(255, 71, 87, 0.35);
         }
 
         .badge-stock {
-            background: rgba(255, 255, 255, 0.05);
-            color: rgba(255, 255, 255, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            margin-left: auto;
+            background: rgba(255, 255, 255, 0.06);
+            color: rgba(255, 255, 255, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.2);
+        }
+
+        .badge-rating-glow {
+            font-size: 16px;
+            font-weight: 800;
+            color: #ffc107;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, rgba(255, 193, 7, 0.25) 0%, rgba(255, 149, 0, 0.1) 100%);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 193, 7, 0.55);
+            border-top: 1px solid rgba(255, 235, 160, 0.9);
+            padding: 5px 12px;
+            border-radius: 16px;
+            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.4), 0 4px 16px rgba(255, 193, 7, 0.4);
+            text-shadow: 0 0 12px rgba(255, 193, 7, 0.85);
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
         }
 
         .card-title {
-            margin: 8px 0 14px 0;
-            font-size: 19px;
-            font-weight: 700;
-            line-height: 1.4;
-            letter-spacing: 0.3px;
+            margin: 8px 0 12px 0;
+            font-size: 22px;
+            font-weight: 800;
+            line-height: 1.35;
+            letter-spacing: 0.4px;
             color: #ffffff;
-            background: linear-gradient(135deg, rgba(255, 122, 0, 0.12) 0%, rgba(255, 180, 0, 0.04) 100%);
-            border: 1px solid rgba(255, 149, 0, 0.35);
-            border-radius: 14px;
-            padding: 10px 14px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.08);
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+            background: linear-gradient(135deg, rgba(255, 149, 0, 0.22) 0%, rgba(255, 255, 255, 0.04) 100%);
+            backdrop-filter: blur(14px) saturate(180%);
+            -webkit-backdrop-filter: blur(14px) saturate(180%);
+            border: 1px solid rgba(255, 149, 0, 0.45);
+            border-top: 1px solid rgba(255, 210, 130, 0.75);
+            border-radius: 16px;
+            padding: 12px 16px;
+            box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.35), 0 8px 24px rgba(0, 0, 0, 0.4);
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9);
             word-break: break-word;
             transition: var(--base-transition);
         }
 
         .item-card:hover .card-title {
-            border-color: rgba(255, 180, 0, 0.6);
-            background: linear-gradient(135deg, rgba(255, 122, 0, 0.22) 0%, rgba(255, 180, 0, 0.08) 100%);
-            box-shadow: 0 6px 20px rgba(255, 122, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.15);
-            color: #ffb300;
+            border-color: rgba(255, 180, 0, 0.8);
+            border-top-color: rgba(255, 240, 180, 1);
+            background: linear-gradient(135deg, rgba(255, 149, 0, 0.32) 0%, rgba(255, 180, 0, 0.12) 100%);
+            box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.6), 0 10px 28px rgba(255, 122, 0, 0.4);
+            color: #ffc107;
         }
 
         .card-profit-box {
@@ -448,12 +939,17 @@
         }
 
         .card-price {
-            color: #00e676;
-            font-size: 24px;
-            font-weight: 800;
-            margin: 4px 0 12px 0;
+            color: rgba(0, 230, 118, 0.95);
+            font-size: 16px;
+            font-weight: 600;
+            margin: 4px 0 10px 0;
             font-family: Orbitron, Kanit, sans-serif;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.3px;
+            background: rgba(0, 230, 118, 0.08);
+            border: 1px solid rgba(0, 230, 118, 0.2);
+            padding: 5px 12px;
+            border-radius: 12px;
+            width: fit-content;
         }
 
         .card-desc {
@@ -485,65 +981,62 @@
             }
         }
 
-        .btn-action {
-            background: var(--purple-gradient);
-            color: #ffffff;
-            border: none;
-            padding: 14px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: 600;
-            width: 100%;
-            text-transform: uppercase;
-            transition: var(--base-transition);
-            font-family: Kanit, sans-serif;
-            box-shadow: 0 4px 15px rgba(255, 122, 0, 0.25);
-        }
-
-        .btn-action:hover:not(:disabled) {
-            transform: scale(1.02);
-            filter: brightness(1.1);
-            box-shadow: 0 6px 20px rgba(255, 122, 0, 0.4);
-        }
-
-        .btn-action:disabled {
-            background: rgba(255, 255, 255, 0.05);
-            color: rgba(255, 255, 255, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            cursor: not-allowed;
-            box-shadow: none;
-        }
-
+        /* Orange Liquid Glass Action Buttons */
+        .btn-action,
         .btn-card-buy {
-            background: var(--purple-gradient);
-            color: #ffffff;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 30px;
-            cursor: pointer;
-            font-weight: 600;
-            font-family: Kanit, sans-serif;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            transition: var(--base-transition);
-            box-shadow: 0 4px 15px rgba(255, 122, 0, 0.3);
+            background: linear-gradient(135deg, rgba(255, 149, 0, 0.45) 0%, rgba(255, 122, 0, 0.25) 100%) !important;
+            backdrop-filter: blur(16px) saturate(180%) !important;
+            -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+            color: #ffffff !important;
+            border: 1px solid rgba(255, 180, 0, 0.6) !important;
+            border-top: 1px solid rgba(255, 230, 160, 0.9) !important;
+            padding: 13px 26px !important;
+            border-radius: 30px !important;
+            cursor: pointer !important;
+            font-weight: 700 !important;
+            font-family: Kanit, sans-serif !important;
+            font-size: 15px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            width: 100% !important;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            box-shadow: inset 0 1px 2px 0 rgba(255, 255, 255, 0.6), inset 0 -1px 2px 0 rgba(0, 0, 0, 0.4), 0 10px 25px rgba(255, 122, 0, 0.35) !important;
+            text-shadow: 0 1px 6px rgba(0, 0, 0, 0.6) !important;
+            outline: none !important;
+            position: relative !important;
+            overflow: hidden !important;
         }
 
+        .btn-action::before,
+        .btn-card-buy::before {
+            content: '' !important;
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            height: 45% !important;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0) 100%) !important;
+            pointer-events: none !important;
+        }
+
+        .btn-action:hover:not(:disabled),
         .btn-card-buy:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 122, 0, 0.5);
-            filter: brightness(1.1);
+            background: linear-gradient(135deg, rgba(255, 165, 0, 0.6) 0%, rgba(255, 135, 0, 0.35) 100%) !important;
+            border-color: rgba(255, 200, 80, 0.8) !important;
+            border-top-color: rgba(255, 255, 200, 1) !important;
+            transform: translateY(-2px) scale(1.01) !important;
+            box-shadow: inset 0 1px 3px 0 rgba(255, 255, 255, 0.8), 0 14px 35px rgba(255, 122, 0, 0.5) !important;
+            color: #ffffff !important;
         }
 
+        .btn-action:disabled,
         .btn-card-buy:disabled {
-            background: rgba(255, 255, 255, 0.05);
-            color: rgba(255, 255, 255, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: none;
-            cursor: not-allowed;
+            background: rgba(255, 255, 255, 0.05) !important;
+            color: rgba(255, 255, 255, 0.3) !important;
+            border: 1px solid rgba(255, 255, 255, 0.08) !important;
+            box-shadow: none !important;
+            cursor: not-allowed !important;
         }
 
         .form-panel {
@@ -864,16 +1357,125 @@
             text-transform: uppercase;
         }
 
-        .hero-title {
-            font-family: Orbitron, Kanit, sans-serif;
-            font-size: 56px;
-            font-weight: 900;
-            margin: 0 0 8px 0;
-            letter-spacing: 3px;
+        /* 3D Holographic Trading Emblem */
+        .hero-holo-container {
+            position: relative;
+            width: 90px;
+            height: 90px;
+            margin: 0 auto 15px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-holo-badge {
+            width: 70px;
+            height: 70px;
+            border-radius: 22px;
+            background: linear-gradient(135deg, rgba(255, 149, 0, 0.25) 0%, rgba(255, 122, 0, 0.08) 100%);
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            border: 1px solid rgba(255, 149, 0, 0.5);
+            border-top: 1px solid rgba(255, 220, 150, 0.8);
+            box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.5), 0 10px 30px rgba(255, 122, 0, 0.35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+            animation: floatEmblem 3.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes floatEmblem {
+            0% { transform: translateY(0) rotate(0deg); }
+            100% { transform: translateY(-8px) rotate(3deg); }
+        }
+
+        .holo-icon {
+            font-size: 32px;
             background: linear-gradient(135deg, #ffffff 0%, #ffc107 50%, #ff7a00 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 25px rgba(255, 122, 0, 0.35));
+            filter: drop-shadow(0 0 12px rgba(255, 149, 0, 0.8));
+        }
+
+        .holo-ring-outer {
+            position: absolute;
+            width: 95px;
+            height: 95px;
+            border-radius: 50%;
+            border: 2px dashed rgba(255, 149, 0, 0.5);
+            animation: spinRing 12s linear infinite;
+        }
+
+        .holo-ring-inner {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 1px solid rgba(0, 230, 118, 0.4);
+            animation: spinRing 8s linear infinite reverse;
+        }
+
+        @keyframes spinRing {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Big Liquid Glass Frame Badge for Hero Title */
+        .hero-title-glass-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px 48px;
+            border-radius: 35px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
+            backdrop-filter: blur(24px) saturate(180%);
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            border: 1px solid rgba(255, 149, 0, 0.45);
+            border-top: 1px solid rgba(255, 220, 140, 0.85);
+            box-shadow: inset 0 1px 2px 0 rgba(255, 255, 255, 0.45), inset 0 -1px 2px 0 rgba(0, 0, 0, 0.5), 0 15px 45px rgba(0, 0, 0, 0.5), 0 0 35px rgba(255, 122, 0, 0.25);
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.35s ease;
+        }
+
+        .hero-title-glass-badge::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 45%;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0) 100%);
+            pointer-events: none;
+        }
+
+        .hero-title-glass-badge:hover {
+            transform: translateY(-3px) scale(1.02);
+            border-color: rgba(255, 180, 0, 0.7);
+            border-top-color: rgba(255, 255, 200, 1);
+            box-shadow: inset 0 1px 3px 0 rgba(255, 255, 255, 0.65), 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 45px rgba(255, 149, 0, 0.4);
+        }
+
+        .hero-title {
+            font-family: Orbitron, Kanit, sans-serif;
+            font-size: 64px;
+            font-weight: 900;
+            margin: 0;
+            letter-spacing: 4px;
+            background: linear-gradient(90deg, #ffffff 0%, #ffc107 25%, #ff7a00 50%, #ffc107 75%, #ffffff 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: textShimmer 5s linear infinite;
+            filter: drop-shadow(0 2px 15px rgba(255, 122, 0, 0.6));
+            line-height: 1.25;
+        }
+
+        @keyframes textShimmer {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
         }
 
         .hero-slogan {
@@ -884,13 +1486,73 @@
             text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
         }
 
+        /* Live Stats Deck Badges */
+        .hero-stats-deck {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .hero-stat-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 16px;
+            border-radius: 18px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-top: 1px solid rgba(255, 255, 255, 0.28);
+            box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.25), 0 8px 24px rgba(0, 0, 0, 0.35);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .hero-stat-badge:hover {
+            transform: translateY(-3px) scale(1.03);
+            border-color: rgba(255, 149, 0, 0.45);
+            box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.4), 0 12px 30px rgba(255, 122, 0, 0.25);
+        }
+
+        .stat-badge-icon {
+            font-size: 16px;
+            width: 30px;
+            height: 30px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stat-badge-info {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+        }
+
+        .stat-badge-num {
+            font-family: Orbitron, Kanit, sans-serif;
+            font-size: 13px;
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        .stat-badge-label {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.65);
+        }
+
         .hero-features-inline {
             display: flex;
             align-items: center;
             gap: 12px;
             font-size: 14px;
             color: rgba(255, 255, 255, 0.75);
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             flex-wrap: wrap;
             justify-content: center;
         }
@@ -922,66 +1584,165 @@
 
         .search-box-wrapper .search-icon {
             position: absolute;
-            left: 20px;
+            left: 22px;
             top: 50%;
             transform: translateY(-50%);
-            color: rgba(255, 149, 0, 0.7);
-            font-size: 16px;
+            color: #ff9500;
+            font-size: 18px;
+            filter: drop-shadow(0 0 10px rgba(255, 149, 0, 0.7));
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+
+        .search-box-wrapper:focus-within .search-icon {
+            transform: translateY(-50%) scale(1.2);
+            color: #ffc107;
+            filter: drop-shadow(0 0 15px rgba(255, 193, 7, 0.9));
         }
 
         .search-input {
             width: 100%;
-            padding: 16px 20px 16px 50px;
-            border-radius: 30px;
-            border: 1px solid rgba(255, 149, 0, 0.25);
-            background: rgba(22, 24, 36, 0.75);
-            backdrop-filter: blur(12px);
-            color: #fff;
+            padding: 18px 24px 18px 56px;
+            border-radius: 35px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-top: 1px solid rgba(255, 255, 255, 0.4);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.03) 100%);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            color: #ffffff;
             font-family: Kanit, sans-serif;
-            font-size: 15px;
+            font-size: 16px;
+            font-weight: 500;
             outline: none;
-            transition: var(--base-transition);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: inset 0 1px 2px 0 rgba(255, 255, 255, 0.35), inset 0 -1px 2px 0 rgba(0, 0, 0, 0.4), 0 12px 30px rgba(0, 0, 0, 0.45);
             box-sizing: border-box;
         }
 
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: 400;
+        }
+
+        .search-input:hover {
+            border-color: rgba(255, 255, 255, 0.3);
+            border-top-color: rgba(255, 255, 255, 0.6);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%);
+            box-shadow: inset 0 1px 2px 0 rgba(255, 255, 255, 0.45), 0 15px 35px rgba(0, 0, 0, 0.5);
+        }
+
         .search-input:focus {
-            border-color: #ff9500;
-            box-shadow: 0 0 25px rgba(255, 122, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.15);
-            background: rgba(28, 30, 46, 0.9);
+            border-color: rgba(255, 149, 0, 0.7);
+            border-top-color: rgba(255, 220, 140, 0.9);
+            box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.6), 0 0 35px rgba(255, 122, 0, 0.4), 0 15px 40px rgba(0, 0, 0, 0.6);
+            background: linear-gradient(135deg, rgba(255, 149, 0, 0.16) 0%, rgba(255, 255, 255, 0.06) 100%);
         }
 
-        .cat-list {
-            display: flex;
-            gap: 8px;
+        /* macOS / Cyber Dock Badge Deck (Liquid Glass) */
+        .cat-dock-container {
+            display: inline-flex;
+            gap: 10px;
             justify-content: center;
+            align-items: center;
             flex-wrap: wrap;
+            padding: 8px 14px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-top: 1px solid rgba(255, 255, 255, 0.28);
+            border-radius: 35px;
+            box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.25), 0 12px 30px rgba(0, 0, 0, 0.45);
+            margin-top: 6px;
         }
 
-        .btn-category {
+        .dock-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 20px;
+            border-radius: 25px;
+            font-family: Kanit, sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.08);
             color: rgba(255, 255, 255, 0.7);
-            padding: 8px 18px;
-            border-radius: 30px;
-            cursor: pointer;
-            transition: var(--base-transition);
-            font-family: Kanit, sans-serif;
-            font-size: 14px;
+            position: relative;
+            outline: none;
         }
 
-        .btn-category:hover {
-            background: rgba(255, 149, 0, 0.1);
-            color: #fff;
-            border-color: rgba(255, 149, 0, 0.3);
+        .dock-badge .dock-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            transition: transform 0.25s ease;
         }
 
-        .btn-category.active {
-            background: rgba(255, 122, 0, 0.18);
+        .dock-badge:hover {
+            transform: translateY(-3px) scale(1.03);
+            color: #ffffff;
+            border-color: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .dock-badge:hover .dock-icon {
+            transform: scale(1.2);
+        }
+
+        /* 1. All Items Badge Accent (Gold/Orange Theme) */
+        .dock-badge.badge-all .dock-icon {
             color: #ff9500;
-            border-color: rgba(255, 122, 0, 0.45);
-            font-weight: 500;
-            box-shadow: 0 4px 15px rgba(255, 122, 0, 0.2);
+        }
+
+        .dock-badge.badge-all.active {
+            background: linear-gradient(135deg, rgba(255, 149, 0, 0.25) 0%, rgba(255, 122, 0, 0.12) 100%);
+            border-color: rgba(255, 149, 0, 0.55);
+            color: #ffaa00;
+            font-weight: 600;
+            box-shadow: 0 6px 20px rgba(255, 122, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        /* 2. Recommended Badge Accent (Fire Red/Amber Theme) */
+        .dock-badge.badge-recommended .dock-icon {
+            color: #ff4757;
+        }
+
+        .dock-badge.badge-recommended.active {
+            background: linear-gradient(135deg, rgba(255, 71, 87, 0.25) 0%, rgba(255, 107, 129, 0.12) 100%);
+            border-color: rgba(255, 71, 87, 0.55);
+            color: #ff6b81;
+            font-weight: 600;
+            box-shadow: 0 6px 20px rgba(255, 71, 87, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        /* 3. Price Low to High Accent (Emerald Green Theme) */
+        .dock-badge.badge-price-asc .dock-icon {
+            color: #2ed573;
+        }
+
+        .dock-badge.badge-price-asc.active {
+            background: linear-gradient(135deg, rgba(46, 213, 115, 0.25) 0%, rgba(32, 201, 151, 0.12) 100%);
+            border-color: rgba(46, 213, 115, 0.55);
+            color: #2ed573;
+            font-weight: 600;
+            box-shadow: 0 6px 20px rgba(46, 213, 115, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        /* 4. Price High to Low Accent (Cyber Violet Theme) */
+        .dock-badge.badge-price-desc .dock-icon {
+            color: #a855f7;
+        }
+
+        .dock-badge.badge-price-desc.active {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.25) 0%, rgba(192, 132, 252, 0.12) 100%);
+            border-color: rgba(168, 85, 247, 0.55);
+            color: #c084fc;
+            font-weight: 600;
+            box-shadow: 0 6px 20px rgba(168, 85, 247, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
         }
 
         @media (max-width: 768px) {
@@ -989,6 +1750,18 @@
             .hero-slogan { font-size: 18px; }
             .hero-features-inline { flex-direction: column; gap: 6px; }
             .hero-feat-divider { display: none; }
+            .cat-dock-container {
+                width: 100%;
+                border-radius: 25px;
+                padding: 6px;
+                gap: 6px;
+            }
+            .dock-badge {
+                flex: 1 1 calc(50% - 10px);
+                justify-content: center;
+                padding: 8px 12px;
+                font-size: 13px;
+            }
         }
 
         .search-bar-container {
@@ -1130,35 +1903,59 @@
         }
 
         .social-floating-btn {
-            width: 50px;
-            height: 50px;
+            width: 52px;
+            height: 52px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 24px;
-            color: white;
+            color: #ffffff;
             text-decoration: none;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
-            transition: var(--base-transition);
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
+            overflow: hidden;
+            outline: none;
+        }
+
+        .social-floating-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 48%;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0) 100%);
+            border-radius: 50% 50% 0 0;
+            pointer-events: none;
         }
 
         .social-floating-btn:hover {
-            transform: scale(1.1) translateY(-3px);
-            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.55);
+            transform: scale(1.15) translateY(-4px);
+            filter: brightness(1.15);
         }
 
         .social-floating-btn.facebook {
-            background: #1877f2;
+            background: linear-gradient(135deg, rgba(24, 119, 242, 0.55) 0%, rgba(24, 119, 242, 0.3) 100%);
+            border: 1px solid rgba(24, 119, 242, 0.65);
+            border-top: 1px solid rgba(175, 215, 255, 0.95);
+            box-shadow: inset 0 1px 2px 0 rgba(255, 255, 255, 0.7), inset 0 -1px 2px 0 rgba(0, 0, 0, 0.4), 0 10px 28px rgba(24, 119, 242, 0.45);
         }
 
         .social-floating-btn.line-openchat {
-            background: #00b900;
+            background: linear-gradient(135deg, rgba(0, 185, 0, 0.55) 0%, rgba(0, 185, 0, 0.3) 100%);
+            border: 1px solid rgba(0, 185, 0, 0.65);
+            border-top: 1px solid rgba(175, 255, 175, 0.95);
+            box-shadow: inset 0 1px 2px 0 rgba(255, 255, 255, 0.7), inset 0 -1px 2px 0 rgba(0, 0, 0, 0.4), 0 10px 28px rgba(0, 185, 0, 0.45);
         }
 
         .social-floating-btn.line-friend {
-            background: #06c755;
+            background: linear-gradient(135deg, rgba(6, 199, 85, 0.55) 0%, rgba(6, 199, 85, 0.3) 100%);
+            border: 1px solid rgba(6, 199, 85, 0.65);
+            border-top: 1px solid rgba(175, 255, 205, 0.95);
+            box-shadow: inset 0 1px 2px 0 rgba(255, 255, 255, 0.7), inset 0 -1px 2px 0 rgba(0, 0, 0, 0.4), 0 10px 28px rgba(6, 199, 85, 0.45);
         }
 
         .social-floating-btn::after {
@@ -1207,10 +2004,44 @@
         .swal2-container {
             z-index: 999999 !important;
         }
+
+        /* React Bits DotField CSS */
+        .dot-field-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .dot-field-container canvas,
+        .dot-field-container svg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
     </style>
 </head>
 
 <body>
+
+    <!-- React Bits DotField Container -->
+    <div id="dot-field-container" class="dot-field-container">
+        <canvas id="dot-field-canvas"></canvas>
+        <svg id="dot-field-svg" style="position:absolute; inset:0; width:100%; height:100%; pointer-events:none;">
+            <defs>
+                <radialGradient id="dot-field-glow-grad">
+                    <stop offset="0%" stop-color="rgba(255, 149, 0, 0.45)" />
+                    <stop offset="100%" stop-color="transparent" />
+                </radialGradient>
+            </defs>
+            <circle id="dot-field-glow" cx="-9999" cy="-9999" r="160" fill="url(#dot-field-glow-grad)" style="opacity:0; will-change:opacity;" />
+        </svg>
+    </div>
 
     <!-- Cyber Trading Wave & Candlestick Overlay -->
     <div class="trading-bg-overlay">
@@ -1268,6 +2099,70 @@
         </svg>
     </div>
 
+    <!-- Cyber Glass Nav Drawer Overlay -->
+    <div id="navDrawerOverlay" class="drawer-overlay" onclick="window.closeNavDrawer(event)">
+        <div class="drawer-content" onclick="event.stopPropagation()">
+            <div class="drawer-header">
+                <div class="drawer-brand">
+                    <span class="brand-logo-dot"></span> Trading God
+                </div>
+                <button class="drawer-close-btn" onclick="window.closeNavDrawer()">&times;</button>
+            </div>
+            
+            <div class="drawer-body">
+                <div class="drawer-user-info" id="drawer-user-card" style="display:none;">
+                    <i class="fa-solid fa-user-check" style="color:#00e676; font-size:18px;"></i>
+                    <div>
+                        <div id="drawer-username" style="font-weight:700; color:#fff; font-size:14px;">User</div>
+                        <div style="font-size:11px; color:rgba(255,255,255,0.6);">เข้าสู่ระบบแล้ว (ONLINE 24/7)</div>
+                    </div>
+                </div>
+
+                <div class="drawer-dock-deck">
+                    <button class="drawer-dock-badge badge-home" onclick="window.navDrawerSelect('homePage')">
+                        <span class="dock-icon"><i class="fa-solid fa-house"></i></span>
+                        <span class="dock-label">หน้าแรก</span>
+                        <i class="fa-solid fa-chevron-right arrow-icon"></i>
+                    </button>
+                    
+                    <button id="drawer-user-link" class="drawer-dock-badge badge-user" style="display:none;" onclick="window.navDrawerSelect('historyPage')">
+                        <span class="dock-icon"><i class="fa-solid fa-user-circle"></i></span>
+                        <span class="dock-label">บัญชีของฉัน / ประวัติสั่งซื้อ</span>
+                        <i class="fa-solid fa-chevron-right arrow-icon"></i>
+                    </button>
+
+                    <button id="drawer-admin-link" class="drawer-dock-badge badge-admin" style="display:none;" onclick="window.navDrawerSelect('adminPage')">
+                        <span class="dock-icon"><i class="fa-solid fa-shield-halved"></i></span>
+                        <span class="dock-label">แผงควบคุมแอดมิน</span>
+                        <i class="fa-solid fa-chevron-right arrow-icon"></i>
+                    </button>
+
+                    <button id="drawer-reg-btn" class="drawer-dock-badge badge-reg" onclick="window.navDrawerAuth('reg')">
+                        <span class="dock-icon"><i class="fa-solid fa-user-plus"></i></span>
+                        <span class="dock-label">สมัครสมาชิก</span>
+                        <i class="fa-solid fa-chevron-right arrow-icon"></i>
+                    </button>
+
+                    <button id="drawer-auth-btn" class="drawer-dock-badge badge-login" onclick="window.navDrawerAuth('login')">
+                        <span class="dock-icon"><i class="fa-solid fa-right-to-bracket"></i></span>
+                        <span class="dock-label">เข้าสู่ระบบ</span>
+                        <i class="fa-solid fa-chevron-right arrow-icon"></i>
+                    </button>
+
+                    <button id="drawer-logout-btn" class="drawer-dock-badge badge-logout" style="display:none;" onclick="window.navDrawerLogout()">
+                        <span class="dock-icon"><i class="fa-solid fa-right-from-bracket"></i></span>
+                        <span class="dock-label">ออกจากระบบ</span>
+                        <i class="fa-solid fa-chevron-right arrow-icon"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="drawer-footer">
+                <i class="fa-solid fa-bolt" style="color:#ff9500;"></i> TRADING GOD AUTOMATED STORE
+            </div>
+        </div>
+    </div>
+
     <div id="toast-container"></div>
 
     <div id="loading-overlay" class="loading-overlay">
@@ -1278,33 +2173,24 @@
     </div>
 
     <nav class="navbar">
-        <div class="brand-logo" onclick="window.showPage('homePage')"><span class="brand-logo-dot"></span>Trading God</div>
-        <div class="nav-actions">
-            <a class="nav-link" onclick="window.showPage('homePage')"><i class="fa-solid fa-house"></i> หน้าแรก</a>
-            <a id="user-link" class="nav-link" style="display:none;" onclick="window.showPage('historyPage')"><i
-                    class="fa-solid fa-user-circle"></i> บัญชีของฉัน</a>
-            <a id="admin-link" class="nav-link" style="display:none; color: var(--danger-red);"
-                onclick="window.showPage('adminPage')"><i class="fa-solid fa-shield-halved"></i> แอดมิน</a>
-            <button id="register-btn-top" class="btn-register-top"
-                onclick="window.showPage('authPage'); window.toggleAuth('reg');"><i class="fa-solid fa-user-plus"></i>
-                สมัครสมาชิก</button>
-            <button id="auth-btn-top" class="btn-login-top"
-                onclick="window.showPage('authPage'); window.toggleAuth('login');"><i
-                    class="fa-solid fa-right-to-bracket"></i> เข้าสู่ระบบ</button>
-            <button id="logout-btn" class="nav-link" style="display:none; background:none; border:none;"
-                onclick="window.handleLogout()"><i class="fa-solid fa-right-from-bracket"></i> ออกจากระบบ</button>
+        <div class="brand-logo" onclick="window.showPage('homePage')">
+            <span class="brand-logo-dot"></span>
+            Trading God
         </div>
+        <button class="hamburger-toggle-btn" onclick="window.toggleNavDrawer()">
+            <i class="fa-solid fa-bars-staggered"></i>
+            <span>เมนู</span>
+        </button>
     </nav>
 
     <main id="homePage" class="content-page active">
         <!-- Integrated Frameless Hero Section -->
         <div class="hero-integrated-section">
-            <div class="hero-top-badge">
-                <i class="fa-solid fa-shield-halved"></i> ULTIMATE TRADING STORE 24/7
+            <div class="hero-title-glass-badge">
+                <h1 class="hero-title">Trading God</h1>
             </div>
-            <h1 class="hero-title">Trading God</h1>
             <p class="hero-slogan"><i class="fa-solid fa-bolt" style="color:#ff9500;"></i> ซื้อสินค้าอัตโนมัติ 24 ชม.</p>
-            
+
             <div class="hero-features-inline">
                 <span class="hero-feat-item"><i class="fa-solid fa-circle-check" style="color:var(--success-green);"></i> สินค้าพรีเมียม ได้รับสินค้าทันที !</span>
                 <span class="hero-feat-divider">•</span>
@@ -1317,17 +2203,32 @@
                     <i class="fa-solid fa-magnifying-glass search-icon"></i>
                     <input type="text" id="search-input" class="search-input" placeholder="ค้นหาสินค้าที่คุณต้องการ..." onkeyup="window.handleSearch()">
                 </div>
-                <div class="cat-list">
-                    <button class="btn-category active" id="tab-all" onclick="window.setProductTab('all')"><i class="fa-solid fa-border-all"></i> รายการทั้งหมด</button>
-                    <button class="btn-category" id="tab-recommended" onclick="window.setProductTab('recommended')"><i class="fa-solid fa-star"></i> แนะนำ</button>
-                    <button class="btn-category" id="tab-price-asc" onclick="window.setProductTab('price-asc')"><i class="fa-solid fa-arrow-up-short-wide"></i> ราคาต่ำสุด</button>
-                    <button class="btn-category" id="tab-price-desc" onclick="window.setProductTab('price-desc')"><i class="fa-solid fa-arrow-down-wide-short"></i> ราคาสูงสุด</button>
+                <div class="cat-dock-container">
+                    <button class="btn-category dock-badge badge-all active" id="tab-all" onclick="window.setProductTab('all')">
+                        <span class="dock-icon"><i class="fa-solid fa-border-all"></i></span>
+                        <span class="dock-label">รายการทั้งหมด</span>
+                    </button>
+                    <button class="btn-category dock-badge badge-recommended" id="tab-recommended" onclick="window.setProductTab('recommended')">
+                        <span class="dock-icon"><i class="fa-solid fa-fire"></i></span>
+                        <span class="dock-label">แนะนำ</span>
+                    </button>
+                    <button class="btn-category dock-badge badge-price-asc" id="tab-price-asc" onclick="window.setProductTab('price-asc')">
+                        <span class="dock-icon"><i class="fa-solid fa-arrow-trend-down"></i></span>
+                        <span class="dock-label">ราคาต่ำสุด</span>
+                    </button>
+                    <button class="btn-category dock-badge badge-price-desc" id="tab-price-desc" onclick="window.setProductTab('price-desc')">
+                        <span class="dock-icon"><i class="fa-solid fa-arrow-trend-up"></i></span>
+                        <span class="dock-label">ราคาสูงสุด</span>
+                    </button>
                 </div>
             </div>
         </div>
 
-        <div class="section-header">
-            <h2 class="section-title" id="main-section-title">รายการสินค้าทั้งหมด</h2>
+        <div class="section-header-wrapper">
+            <div class="section-title-badge">
+                <span class="section-icon-box"><i class="fa-solid fa-boxes-stacked"></i></span>
+                <h2 class="section-title" id="main-section-title">รายการสินค้าทั้งหมด</h2>
+            </div>
         </div>
         <div id="items-container" class="items-grid"></div>
 
@@ -1565,10 +2466,14 @@
             </div>
 
             <!-- ── รายการสินค้าปัจจุบัน ── -->
-            <div
-                style="background:var(--container-bg);border-radius:20px;padding:25px;border:1px solid rgba(255,255,255,0.05);">
-                <h3 style="color:#ff9500;margin-top:0;font-family:Orbitron;font-size:16px;">📦 สินค้าทั้งหมด</h3>
-                <div id="admin-product-list" style="max-height:450px;overflow-y:auto;"></div>
+            <div style="background:var(--container-bg);border-radius:20px;padding:25px;border:1px solid rgba(255,255,255,0.05);">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                    <h3 style="color:#ff9500;margin:0;font-family:Orbitron;font-size:16px;">📦 สินค้าทั้งหมด</h3>
+                    <button onclick="window.renderAdminProducts && window.renderAdminProducts()" style="background:rgba(255,149,0,0.15); color:#ff9500; border:1px solid rgba(255,149,0,0.3); padding:6px 14px; border-radius:12px; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:6px; transition:0.2s;">
+                        <i class="fa-solid fa-rotate"></i> รีเฟรชรายการ
+                    </button>
+                </div>
+                <div id="admin-product-list" style="max-height:500px;overflow-y:auto;"></div>
             </div>
         </div>
 
@@ -1827,7 +2732,7 @@
 
             <!-- External link section -->
             <div id="pdetail-link-section" style="margin-bottom:20px; display:none;">
-                <a id="pdetail-link-btn" href="#" target="_blank" style="display:flex; align-items:center; justify-content:center; gap:8px; background:rgba(91,85,246,0.15); color:#9d9afe; border:1px solid rgba(91,85,246,0.3); padding:12px 15px; border-radius:10px; font-size:14px; font-weight:600; text-decoration:none; transition:all 0.2s;" onmouseover="this.style.background='rgba(91,85,246,0.25)'" onmouseout="this.style.background='rgba(91,85,246,0.15)'">
+                <a id="pdetail-link-btn" href="#" target="_blank" class="btn-action" style="display:flex; align-items:center; justify-content:center; gap:8px; border-radius:20px !important; text-decoration:none;">
                     <i class="fa-solid fa-arrow-up-right-from-square"></i> <span id="pdetail-link-text">ดูข้อมูลเพิ่มเติม / ลิงก์อ้างอิง</span>
                 </a>
             </div>
@@ -1935,10 +2840,86 @@
             }
         };
 
+        window.toggleNavDrawer = () => {
+            const overlay = document.getElementById("navDrawerOverlay");
+            if (overlay) overlay.classList.toggle("active");
+            window.syncDrawerState();
+        };
+
+        window.closeNavDrawer = (event) => {
+            if (event && event.target && event.target.id !== "navDrawerOverlay" && !event.target.classList.contains("drawer-close-btn")) return;
+            const overlay = document.getElementById("navDrawerOverlay");
+            if (overlay) overlay.classList.remove("active");
+        };
+
+        window.syncDrawerState = () => {
+            const userCard = document.getElementById("drawer-user-card");
+            const userUsername = document.getElementById("drawer-username");
+            const userLink = document.getElementById("drawer-user-link");
+            const adminLink = document.getElementById("drawer-admin-link");
+            const regBtn = document.getElementById("drawer-reg-btn");
+            const authBtn = document.getElementById("drawer-auth-btn");
+            const logoutBtn = document.getElementById("drawer-logout-btn");
+
+            let isAdmin = (sessionRole === "admin");
+            if (sessionUser) {
+                if (userCard) userCard.style.display = "flex";
+                if (userUsername) userUsername.innerText = sessionUser.toUpperCase();
+                if (userLink) userLink.style.display = "flex";
+                if (adminLink) adminLink.style.display = isAdmin ? "flex" : "none";
+                if (regBtn) regBtn.style.display = "none";
+                if (authBtn) authBtn.style.display = "none";
+                if (logoutBtn) logoutBtn.style.display = "flex";
+            } else {
+                if (userCard) userCard.style.display = "none";
+                if (userLink) userLink.style.display = "none";
+                if (adminLink) adminLink.style.display = "none";
+                if (regBtn) regBtn.style.display = "flex";
+                if (authBtn) authBtn.style.display = "flex";
+                if (logoutBtn) logoutBtn.style.display = "none";
+            }
+        };
+
+        window.navDrawerSelect = (page) => {
+            const overlay = document.getElementById("navDrawerOverlay");
+            if (overlay) overlay.classList.remove("active");
+            window.showPage(page);
+        };
+
+        window.navDrawerAuth = (mode) => {
+            const overlay = document.getElementById("navDrawerOverlay");
+            if (overlay) overlay.classList.remove("active");
+            window.showPage('authPage');
+            window.toggleAuth(mode);
+        };
+
+        window.navDrawerLogout = () => {
+            const overlay = document.getElementById("navDrawerOverlay");
+            if (overlay) overlay.classList.remove("active");
+            window.handleLogout();
+        };
+
+        window.toggleCardDesc = (key, btn) => {
+            const wrap = document.getElementById(`desc-wrap-${key}`);
+            if (!wrap) return;
+            const isExpanded = wrap.classList.toggle("expanded");
+            btn.classList.toggle("expanded", isExpanded);
+            const span = btn.querySelector("span");
+            if (span) {
+                span.innerText = isExpanded ? "ซ่อนรายละเอียด" : "อ่านรายละเอียดเพิ่มเติม";
+            }
+        };
+
         window.showPage = (targetId) => {
             document.querySelectorAll(".content-page").forEach(p => p.classList.remove("active"));
-            document.getElementById(targetId).classList.add("active");
+            const target = document.getElementById(targetId);
+            if (target) target.classList.add("active");
             window.scrollTo(0, 0);
+
+            if (targetId === "adminPage") {
+                if (typeof window.renderAdminProducts === "function") window.renderAdminProducts();
+                if (typeof window.loadAdminDashboard === "function") window.loadAdminDashboard();
+            }
         };
 
         window.toggleAuth = (mode) => {
@@ -2000,26 +2981,28 @@
                 const rawImg = data.images || data.image || data.img || "";
                 const isVideo = data.mediaType === "video" || rawImg.startsWith("data:video/") || rawImg.endsWith(".mp4") || rawImg.endsWith(".webm") || rawImg.endsWith(".ogg");
                 
+                const FAST_SVG_PLACEHOLDER = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='260' viewBox='0 0 400 260'><rect width='400' height='260' fill='%23121422'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%23ff9500' font-family='sans-serif' font-size='20' font-weight='bold'>Trading God</text></svg>";
+
                 let mediaHtml = "";
                 if (isVideo) {
                     mediaHtml = `
                         <div class="media-frame">
-                            <video src="${rawImg}" autoplay loop muted playsinline></video>
+                            <video src="${rawImg}" autoplay loop muted playsinline preload="metadata"></video>
                         </div>`;
                 } else {
                     const imageUrl = (rawImg.startsWith("http") || rawImg.startsWith("data:image/"))
                         ? rawImg
-                        : "https://placehold.co/400x260/0d0d18/5b55f6?text=Trading+God";
+                        : FAST_SVG_PLACEHOLDER;
                     mediaHtml = `
                         <div class="media-frame">
-                            <img src="${imageUrl}" onerror="this.src='https://placehold.co/400x260/0d0d18/5b55f6?text=Trading+God'" alt="${data.name || ''}">
+                            <img src="${imageUrl}" loading="eager" fetchpriority="high" decoding="async" onerror="this.src='${FAST_SVG_PLACEHOLDER}'" alt="${data.name || ''}">
                         </div>`;
                 }
 
                 const isRecommended = data.category === "recommended";
                 const recBadge = isRecommended ? `<span class="badge-pill badge-recommended"><i class="fa-solid fa-fire"></i> แนะนำ</span>` : "";
-                const rating = Math.min(Math.max(parseInt(data.rating) || 0, 0), 5);
-                const starHtml = rating > 0 ? `<span style="font-size:12px;color:#ffc107;letter-spacing:1px;" title="${rating} ดาว">${'\u2605'.repeat(rating)}${'\u2606'.repeat(5-rating)}</span>` : "";
+                const rating = Math.min(Math.max(parseInt(data.rating) || 5, 1), 5);
+                const starHtml = `<span class="badge-rating-glow" title="${rating} ดาว">${'\u2605'.repeat(rating)}${'\u2606'.repeat(5-rating)}</span>`;
                 const rawPrice = String(data.price || "0").trim();
                 const displayPrice = /^[0-9]+$/.test(rawPrice)
                     ? `฿${Number(rawPrice).toLocaleString()}`
@@ -2030,6 +3013,9 @@
                         <i class="fa-solid fa-chart-line"></i> กำไร: <span>${data.profit}</span>
                     </div>
                 ` : "";
+
+                const descText = data.description || "ไม่มีรายละเอียดสินค้า";
+                const isLongDesc = descText.length > 70 || descText.includes("\n");
 
                 const card = document.createElement("div");
                 card.className = "item-card";
@@ -2043,17 +3029,40 @@
                             </span>
                             ${recBadge}
                             ${starHtml}
-                            <span class="badge-pill badge-stock">คงเหลือ: ${stockCount}</span>
                         </div>
                         <h3 class="card-title">${data.name || "สินค้าไม่มีชื่อ"}</h3>
                         ${profitHtml}
                         <p class="card-price">${displayPrice}</p>
-                        <p class="card-desc">${data.description || "ไม่มีรายละเอียดสินค้า"}</p>
+                        <div class="card-desc-wrapper" id="desc-wrap-${data.key}">
+                            <p class="card-desc">${descText}</p>
+                        </div>
+                        ${isLongDesc ? `
+                            <button class="btn-toggle-desc" onclick="window.toggleCardDesc('${data.key}', this)">
+                                <i class="fa-solid fa-chevron-down"></i> <span>อ่านรายละเอียดเพิ่มเติม</span>
+                            </button>
+                        ` : ""}
+                        <div style="margin-top:auto; margin-bottom:12px; display:flex; justify-content:flex-end;">
+                            <span class="badge-pill badge-stock" style="font-size: 12px; padding: 5px 12px; font-weight: 600;">
+                                <i class="fa-solid fa-boxes-stacked" style="color:#ff9500; margin-right:4px;"></i> คงเหลือ: ${stockCount}
+                            </span>
+                        </div>
                     </div>
                     <button class="btn-card-buy" onclick="window.showProductDetails('${data.key}')" ${isSold ? "disabled" : ""}>
                         ${isSold ? "<i class='fa-solid fa-xmark'></i> สินค้าหมด" : "เลือกซื้อ <i class='fa-solid fa-arrow-right-long' style='margin-left: 6px;'></i>"}
                     </button>`;
                 grid.appendChild(card);
+            });
+        };
+
+        const preloadImages = (products) => {
+            if (!Array.isArray(products)) return;
+            products.forEach(p => {
+                const rawImg = p.images || p.image || p.img || "";
+                if (rawImg && (rawImg.startsWith("http") || rawImg.startsWith("data:image/"))) {
+                    const img = new Image();
+                    img.decoding = "async";
+                    img.src = rawImg;
+                }
             });
         };
 
@@ -2077,6 +3086,7 @@
                             }
                         });
                     }
+                    preloadImages(cachedProducts);
                     updateProductDisplay();
                 }, (err) => {
                     if (grid) grid.innerHTML = `<div style='text-align:center;color:#ff6b6b;padding:60px;grid-column:1/-1;'>ไม่สามารถโหลดสินค้าได้<br><small>${err.message}</small></div>`;
@@ -3119,7 +4129,7 @@
             onValue(ref(db, "accounts"), (snap) => {
                 list.innerHTML = "";
                 if (!snap.exists()) {
-                    list.innerHTML = "<p style='color:#888;text-align:center;'>ยังไม่มีสินค้า</p>";
+                    list.innerHTML = "<p style='color:#888;text-align:center;padding:40px;'>ยังไม่มีสินค้าในระบบ</p>";
                     return;
                 }
                 snap.forEach(child => {
@@ -3133,19 +4143,23 @@
 
                     const isSold = stockCount === 0;
                     list.insertAdjacentHTML("afterbegin", `
-                        <div style="background:rgba(0,0,0,0.5); padding:15px; border-radius:10px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; border-left:4px solid ${isSold ? 'var(--danger-red)' : 'var(--success-green)'};">
-                            <div>
-                                <b style="color:var(--accent-gold);">${data.name || "ไม่มีชื่อ"}</b> 
-                                <span style="font-size:12px;color:#888;">(${data.warranty || "ไม่มีประกัน"})</span>
-                                <span style="font-size:11px;background:${data.category === 'recommended' ? '#ffc107' : '#ff7a00'};color:${data.category === 'recommended' ? '#000' : '#fff'};padding:2px 6px;border-radius:4px;margin-left:5px;font-weight:500;">${data.category === 'recommended' ? 'แนะนำ' : 'ทั่วไป'}</span><br>
-                                <span style="color:var(--success-green);">฿${data.price}</span> | สถานะ: ${isSold ? '<span style="color:var(--danger-red);">ขายหมดแล้ว</span>' : `เหลือ ${stockCount} ไอดี`}
+                        <div style="background:rgba(20,22,34,0.75); padding:16px; border-radius:14px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center; border:1px solid rgba(255,255,255,0.08); border-left:4px solid ${isSold ? 'var(--danger-red)' : 'var(--success-green)'}; box-shadow:0 4px 15px rgba(0,0,0,0.3);">
+                            <div style="flex:1; min-width:0; padding-right:10px;">
+                                <b style="color:#ffffff; font-size:16px; word-break:break-word;">${data.name || "ไม่มีชื่อ"}</b> 
+                                <span style="font-size:11px; background:${data.category === 'recommended' ? 'rgba(255,193,7,0.2)' : 'rgba(255,122,0,0.2)'}; color:${data.category === 'recommended' ? '#ffc107' : '#ff9500'}; border:1px solid ${data.category === 'recommended' ? 'rgba(255,193,7,0.4)' : 'rgba(255,122,0,0.4)'}; padding:2px 8px; border-radius:12px; margin-left:6px; font-weight:600;">${data.category === 'recommended' ? '⭐ แนะนำ' : '📦 ทั่วไป'}</span><br>
+                                <div style="margin-top:4px; font-size:13px;">
+                                    <span style="color:#00e676; font-weight:700;">฿${data.price}</span> 
+                                    <span style="color:rgba(255,255,255,0.5); margin:0 6px;">|</span> 
+                                    <span style="color:${isSold ? '#ff4d4d' : '#ffffff'};">สถานะ: ${isSold ? '<b style="color:#ff4d4d;">ขายหมดแล้ว (0 ชิ้น)</b>' : `คงเหลือ <b style="color:#00e676;">${stockCount} ชิ้น</b>`}</span>
+                                    ${data.warranty ? `<span style="color:rgba(255,255,255,0.5); margin:0 6px;">|</span> <span style="color:#888;">ประกัน: ${data.warranty}</span>` : ''}
+                                </div>
                             </div>
-                            <div>
-                                <button onclick="window.openEditProductModal('${child.key}')" style="background:#007bff;color:white;border:none;padding:8px 12px;border-radius:8px;cursor:pointer;margin-right:5px;">
-                                    <i class="fa-solid fa-pen"></i>
+                            <div style="display:flex; gap:8px; flex-shrink:0;">
+                                <button onclick="window.openEditProductModal('${child.key}')" title="แก้ไขสินค้า" style="background:linear-gradient(135deg, rgba(0,123,255,0.2) 0%, rgba(0,123,255,0.35) 100%); color:#64b5f6; border:1px solid rgba(0,123,255,0.4); padding:8px 14px; border-radius:10px; cursor:pointer; font-weight:600; font-family:Kanit,sans-serif; font-size:13px; display:flex; align-items:center; gap:5px; transition:0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
+                                    <i class="fa-solid fa-pen-to-square"></i> <span>แก้ไข</span>
                                 </button>
-                                <button onclick="window.adminDeleteProduct('${child.key}')" style="background:var(--danger-red);color:white;border:none;padding:8px 12px;border-radius:8px;cursor:pointer;">
-                                    <i class="fa-solid fa-trash"></i>
+                                <button onclick="window.adminDeleteProduct('${child.key}')" title="ลบสินค้า" style="background:linear-gradient(135deg, rgba(255,77,77,0.2) 0%, rgba(255,77,77,0.35) 100%); color:#ff6b6b; border:1px solid rgba(255,77,77,0.4); padding:8px 14px; border-radius:10px; cursor:pointer; font-weight:600; font-family:Kanit,sans-serif; font-size:13px; display:flex; align-items:center; gap:5px; transition:0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
+                                    <i class="fa-solid fa-trash"></i> <span>ลบ</span>
                                 </button>
                             </div>
                         </div>
@@ -3153,9 +4167,151 @@
                 });
             });
         };
+        window.renderAdminProducts = renderAdminProducts;
+        window.loadAdminDashboard = loadAdminDashboard;
+
+        /* React Bits DotField Component Engine */
+        const initDotField = () => {
+            const container = document.getElementById('dot-field-container');
+            const canvas = document.getElementById('dot-field-canvas');
+            const glowEl = document.getElementById('dot-field-glow');
+            if (!container || !canvas) return;
+
+            const ctx = canvas.getContext('2d', { alpha: true });
+            const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+            const dotRadius = 1.5;
+            const dotSpacing = 14;
+            const cursorRadius = 500;
+            const bulgeStrength = 67;
+            const gradientFrom = 'rgba(255, 149, 0, 0.45)';
+            const gradientTo = 'rgba(255, 122, 0, 0.2)';
+            const TWO_PI = Math.PI * 2;
+
+            let size = { w: 0, h: 0, offsetX: 0, offsetY: 0 };
+            let dots = [];
+            let mouse = { x: -9999, y: -9999, prevX: -9999, prevY: -9999, speed: 0 };
+            let glowOpacity = 0;
+            let engagement = 0;
+            let frameCount = 0;
+
+            function doResize() {
+                const w = window.innerWidth;
+                const h = window.innerHeight;
+
+                canvas.width = w * dpr;
+                canvas.height = h * dpr;
+                canvas.style.width = `${w}px`;
+                canvas.style.height = `${h}px`;
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+                size = { w, h, offsetX: 0, offsetY: 0 };
+                buildDots(w, h);
+            }
+
+            function buildDots(w, h) {
+                const step = dotRadius + dotSpacing;
+                const cols = Math.floor(w / step);
+                const rows = Math.floor(h / step);
+                const padX = (w % step) / 2;
+                const padY = (h % step) / 2;
+                dots = new Array(rows * cols);
+                let idx = 0;
+
+                for (let row = 0; row < rows; row++) {
+                    for (let col = 0; col < cols; col++) {
+                        const ax = padX + col * step + step / 2;
+                        const ay = padY + row * step + step / 2;
+                        dots[idx++] = { ax, ay, sx: ax, sy: ay, vx: 0, vy: 0, x: ax, y: ay };
+                    }
+                }
+            }
+
+            window.addEventListener('mousemove', (e) => {
+                mouse.x = e.clientX;
+                mouse.y = e.clientY;
+            }, { passive: true });
+
+            setInterval(() => {
+                const dx = mouse.prevX - mouse.x;
+                const dy = mouse.prevY - mouse.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                mouse.speed += (dist - mouse.speed) * 0.5;
+                if (mouse.speed < 0.001) mouse.speed = 0;
+                mouse.prevX = mouse.x;
+                mouse.prevY = mouse.y;
+            }, 20);
+
+            function tick() {
+                frameCount++;
+                const { w, h } = size;
+                const len = dots.length;
+
+                const targetEngagement = Math.min(mouse.speed / 5, 1);
+                engagement += (targetEngagement - engagement) * 0.06;
+                if (engagement < 0.001) engagement = 0;
+                const eng = engagement;
+
+                glowOpacity += (eng - glowOpacity) * 0.08;
+
+                if (glowEl) {
+                    glowEl.setAttribute('cx', mouse.x);
+                    glowEl.setAttribute('cy', mouse.y);
+                    glowEl.style.opacity = glowOpacity;
+                }
+
+                ctx.clearRect(0, 0, w, h);
+
+                const grad = ctx.createLinearGradient(0, 0, w, h);
+                grad.addColorStop(0, gradientFrom);
+                grad.addColorStop(1, gradientTo);
+                ctx.fillStyle = grad;
+
+                const cr = cursorRadius;
+                const crSq = cr * cr;
+                const rad = dotRadius / 2;
+
+                ctx.beginPath();
+
+                for (let i = 0; i < len; i++) {
+                    const d = dots[i];
+                    if (!d) continue;
+                    const dx = mouse.x - d.ax;
+                    const dy = mouse.y - d.ay;
+                    const distSq = dx * dx + dy * dy;
+
+                    if (distSq < crSq && eng > 0.01) {
+                        const dist = Math.sqrt(distSq);
+                        const tVal = 1 - dist / cr;
+                        const push = tVal * tVal * bulgeStrength * eng;
+                        const angle = Math.atan2(dy, dx);
+                        d.sx += (d.ax - Math.cos(angle) * push - d.sx) * 0.15;
+                        d.sy += (d.ay - Math.sin(angle) * push - d.sy) * 0.15;
+                    } else {
+                        d.sx += (d.ax - d.sx) * 0.1;
+                        d.sy += (d.ay - d.sy) * 0.1;
+                    }
+
+                    let drawX = d.sx;
+                    let drawY = d.sy;
+
+                    ctx.moveTo(drawX + rad, drawY);
+                    ctx.arc(drawX, drawY, rad, 0, TWO_PI);
+                }
+
+                ctx.fill();
+                requestAnimationFrame(tick);
+            }
+
+            doResize();
+            window.addEventListener('resize', doResize);
+            requestAnimationFrame(tick);
+        };
 
         window.onload = () => {
+            initDotField();
             renderProductGrid();
+            window.syncDrawerState();
             if (sessionUser) {
                 const authBtn = document.getElementById("auth-btn-top");
                 const regBtn = document.getElementById("register-btn-top");
